@@ -31,9 +31,15 @@ const getFileContent = async (pathUrl) => {
 };
 
 const server = http.createServer(async (req, res) => {
-	const { data, statusCode } = await getFileContent(req.url);
-	res.writeHead(statusCode, { "Content-Type": "text/html" });
-	res.end(data);
+	try {
+		const { data, statusCode } = await getFileContent(req.url);
+		res.writeHead(statusCode, { "Content-Type": "text/html" });
+		res.end(data);
+	} catch (error) {
+		console.error(error);
+		res.writeHead(500, { "Content-Type": "text/plain" });
+		res.end("Internal Server Error");
+	}
 });
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
